@@ -31,8 +31,8 @@ You can also do the opposite, feeding the parser html and getting Blundered mark
       blunderParser.reverseParse("<b>Bold <i>Stuff</i></b>")
 </code> --> <code>"^Bold ~Stuff~^"</code>
 
-Here is the current list of elements that can convert:
-^ --> bold tags
-~ --> italic tags
-_ --> underscore tags
+Here is the current list of elements that can convert:<br>
+^ --> bold tags<br>
+~ --> italic tags<br>
+_ --> underscore tags<br>
 \n --> line break tags
