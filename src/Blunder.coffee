@@ -1,3 +1,6 @@
+String.prototype.splice = (index, rem, string) ->
+        @.slice(0, index) + string + @.slice(index + Math.abs(rem))
+
 class window.Blunder
 
         #
@@ -5,79 +8,35 @@ class window.Blunder
         # @param text is the string which converts html elements into ~^_,etc
         #
         reverseParse: (text) ->
-                text = @_replaceBolds(text)
-                text = @_replaceItalics(text)
-                text = @_replaceUnderlines(text)
-                text = @_replaceReturns(text)
+                text = @_replaceExpr(/(<b>|<\/b>)/, text, "^")          #Bold
+                text = @_replaceExpr(/(<i>|<\/i>)/, text, "~")          #Italic
+                text = @_replaceExpr(/(<u>|<\/u>)/, text, "_")          #Underline
+                text = @_replaceExpr(/<br\/>/, text, "\n")              #Line breaks
        
         #
         # parseText: (text) ->
         # @param text is the string to convert ~^_,etc into html elements
         #
         parseText: (text) ->
-                text = @_findBolds(text)
-                text = @_findItalics(text)
-                text = @_findUnderlines(text)
-                text = @_findReturns(text)
+                text = @_parseExpr(/\^/, text, "<b>")                #Bold
+                text = @_parseExpr(/\~/, text, "<i>")                #Italics
+                text = @_parseExpr(/\_/, text, "<u>")                #Underlines
+                text = @_parseExpr(/\n/, text, "<br/>", false)       #line breaks
 
         #
         ## Private Methods used to do the actual replacements
         #
         
-        _findBolds: (text) ->
-                expr = /\^/
+        _parseExpr: (expr, text, tag, boolClose = true) ->
+                clTag = tag.splice(1,0,"/")
                 if expr.test text 
-                        text = text.replace(expr, "<b>")
-                        text = text.replace(expr, "</b>")
-                        @_findBolds(text) #Cycle back through until the test stops us
-                else text
-
-        _findItalics: (text) ->
-                expr = /\~/
-                if expr.test text 
-                        text = text.replace(expr, "<i>")
-                        text = text.replace(expr, "</i>")
-                        @_findItalics(text) #Cycle back through until the test stops us
+                        text = text.replace(expr, tag)
+                        text = text.replace(expr, clTag) unless boolClose is false
+                        @_parseExpr(expr, text, tag, boolClose) #Cycle back through until the test stops us
                 else text
         
-        _findUnderlines: (text) ->
-                expr = /\_/
-                if expr.test text 
-                        text = text.replace(expr, "<u>")
-                        text = text.replace(expr, "</u>")
-                        @_findUnderlines(text) #Cycle back through until the test stops us
-                else text
-        
-        _findReturns: (text) ->
-                expr = /\n/
-                if expr.test text 
-                        text = text.replace(expr, "<br/>")
-                        @_findReturns(text) #Cycle back through until the test stops us
-                else text
-        
-        _replaceBolds: (text) ->
-                expr = /(<b>|<\/b>)/
+        _replaceExpr: (expr, text, mark) ->
                 if expr.test text
-                        text = text.replace(expr, "^")
-                        @_replaceBolds(text)
+                        text = text.replace(expr, mark)
+                        @_replaceExpr(expr, text, mark)
                 else text
-        
-        _replaceItalics: (text) ->
-                expr = /(<i>|<\/i>)/
-                if expr.test text
-                        text = text.replace(expr, "~")
-                        @_replaceItalics(text)
-                else text
-        _replaceUnderlines: (text) ->
-                expr = /(<u>|<\/u>)/
-                if expr.test text
-                        text = text.replace(expr, "_")
-                        @_replaceUnderlines(text)
-                else text
-        _replaceReturns: (text) ->
-                expr = /<br\/>/
-                if expr.test text
-                        text = text.replace(expr, "\n")
-                        @_replaceReturns(text)
-                else text
-
