@@ -12,6 +12,7 @@ class window.Blunder
                 text = @_replaceExpr(/(<i>|<\/i>)/, text, "~")          #Italic
                 text = @_replaceExpr(/(<u>|<\/u>)/, text, "_")          #Underline
                 text = @_replaceExpr(/<br\/>/, text, "\n")              #Line breaks
+                text = @_replaceExpr(/<li>/, text, "    ")              #list
        
         #
         # parseText: (text) ->
@@ -22,17 +23,20 @@ class window.Blunder
                 text = @_parseExpr(/\~/, text, "<i>")                #Italics
                 text = @_parseExpr(/\_/, text, "<u>")                #Underlines
                 text = @_parseExpr(/\n/, text, "<br/>", false)       #line breaks
+                text = @_parseExpr(/\s\s\s\s/, text, "<li>", false, true)       #list
 
         #
         ## Private Methods used to do the actual replacements
         #
         
-        _parseExpr: (expr, text, tag, boolClose = true) ->
+        _parseExpr: (expr, text, tag, closeTag = true, closeOnReturn = false) ->
                 clTag = tag.splice(1,0,"/")
                 if expr.test text 
+                        console.log( "#{expr} passed the test" )
                         text = text.replace(expr, tag)
-                        text = text.replace(expr, clTag) unless boolClose is false
-                        @_parseExpr(expr, text, tag, boolClose) #Cycle back through until the test stops us
+                        text = text.replace(expr, clTag) unless closeTag is false
+                        text = text.replace(/\n/, clTag) unless closeOnReturn is false
+                        @_parseExpr(expr, text, tag, closeTag, closeOnReturn) #Cycle back through until the test stops us
                 else text
         
         _replaceExpr: (expr, text, mark) ->

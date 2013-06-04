@@ -11,29 +11,38 @@
       text = this._replaceExpr(/(<b>|<\/b>)/, text, "^");
       text = this._replaceExpr(/(<i>|<\/i>)/, text, "~");
       text = this._replaceExpr(/(<u>|<\/u>)/, text, "_");
-      return text = this._replaceExpr(/<br\/>/, text, "\n");
+      text = this._replaceExpr(/<br\/>/, text, "\n");
+      return text = this._replaceExpr(/<li>/, text, "    ");
     };
 
     Blunder.prototype.parseText = function(text) {
       text = this._parseExpr(/\^/, text, "<b>");
       text = this._parseExpr(/\~/, text, "<i>");
       text = this._parseExpr(/\_/, text, "<u>");
-      return text = this._parseExpr(/\n/, text, "<br/>", false);
+      text = this._parseExpr(/\n/, text, "<br/>", false);
+      return text = this._parseExpr(/\s\s\s\s/, text, "<li>", false, true);
     };
 
-    Blunder.prototype._parseExpr = function(expr, text, tag, boolClose) {
+    Blunder.prototype._parseExpr = function(expr, text, tag, closeTag, closeOnReturn) {
       var clTag;
 
-      if (boolClose == null) {
-        boolClose = true;
+      if (closeTag == null) {
+        closeTag = true;
+      }
+      if (closeOnReturn == null) {
+        closeOnReturn = false;
       }
       clTag = tag.splice(1, 0, "/");
       if (expr.test(text)) {
+        console.log("" + expr + " passed the test");
         text = text.replace(expr, tag);
-        if (boolClose !== false) {
+        if (closeTag !== false) {
           text = text.replace(expr, clTag);
         }
-        return this._parseExpr(expr, text, tag, boolClose);
+        if (closeOnReturn !== false) {
+          text = text.replace(/\n/, clTag);
+        }
+        return this._parseExpr(expr, text, tag, closeTag, closeOnReturn);
       } else {
         return text;
       }
