@@ -3,14 +3,6 @@ Blunder
 
 Another flavored markdown parser.
 
-It's syntax is as follows:
-
-<code>^Bold Text^</code> parses into -> <code><b>Bold Text</b></code>
-
-<code>~Italic Text~</code> parses into -> <code><i>Italic Text</i></code>
-
-<code>_Underscore Text_</code> parses into -> <code><u>Underscore Text</u></code>
-
 How to use!
 ===
 
@@ -34,5 +26,6 @@ You can also do the opposite, feeding the parser html and getting Blundered mark
 Here is the current list of elements that can convert:<br>
 ^ --> bold tags<br>
 ~ --> italic tags<br>
-_ --> underscore tags<br>
-\n --> line break tags
+_ --> underscore tags<br> 
+\n --> line break tags<br>
+____ --> li tags (four spaces, tab)
