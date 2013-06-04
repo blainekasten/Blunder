@@ -1,7 +1,7 @@
 Blunder
 =======
 
-Another text markup parser.
+Another flavored markdown parser.
 
 It's syntax is as follows:
 
