@@ -19,10 +19,10 @@ class window.Blunder
         # @param text is the string to convert ~^_,etc into html elements
         #
         parseText: (text) ->
-                text = @_parseExpr(/\^/, text, "<b>")                #Bold
-                text = @_parseExpr(/\~/, text, "<i>")                #Italics
-                text = @_parseExpr(/\_/, text, "<u>")                #Underlines
-                text = @_parseExpr(/\n/, text, "<br/>", false)       #line breaks
+                text = @_parseExpr(/\^/, text, "<b>")                           #Bold
+                text = @_parseExpr(/\~/, text, "<i>")                           #Italics
+                text = @_parseExpr(/\_/, text, "<u>")                           #Underlines
+                text = @_parseExpr(/\n/, text, "<br/>", false)                  #line breaks
                 text = @_parseExpr(/\s\s\s\s/, text, "<li>", false, true)       #list
 
         #
@@ -32,10 +32,9 @@ class window.Blunder
         _parseExpr: (expr, text, tag, closeTag = true, closeOnReturn = false) ->
                 clTag = tag.splice(1,0,"/")
                 if expr.test text 
-                        console.log( "#{expr} passed the test" )
                         text = text.replace(expr, tag)
                         text = text.replace(expr, clTag) unless closeTag is false
-                        text = text.replace(/\n/, clTag) unless closeOnReturn is false
+                        text = text.replace(/\n/, clTag) if closeOnReturn is true
                         @_parseExpr(expr, text, tag, closeTag, closeOnReturn) #Cycle back through until the test stops us
                 else text
         

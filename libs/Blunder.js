@@ -34,12 +34,11 @@
       }
       clTag = tag.splice(1, 0, "/");
       if (expr.test(text)) {
-        console.log("" + expr + " passed the test");
         text = text.replace(expr, tag);
         if (closeTag !== false) {
           text = text.replace(expr, clTag);
         }
-        if (closeOnReturn !== false) {
+        if (closeOnReturn === true) {
           text = text.replace(/\n/, clTag);
         }
         return this._parseExpr(expr, text, tag, closeTag, closeOnReturn);
