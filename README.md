@@ -26,7 +26,7 @@ You can also do the opposite, feeding the parser html and getting Blundered mark
 Here is the current list of elements that can convert:<br>
 ^ --> bold tags<br>
 ~ --> italic tags<br>
-_ --> underscore tags<br> 
+__ --> underscore tags<br> 
 \n --> line break tags<br>
 ____ --> li tags (four spaces, tab)
 [a]href tag --> anchor tag (<a href="href">tag</a>)
