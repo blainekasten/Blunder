@@ -29,3 +29,4 @@ Here is the current list of elements that can convert:<br>
 _ --> underscore tags<br> 
 \n --> line break tags<br>
 ____ --> li tags (four spaces, tab)
+[a]href tag --> anchor tag (<a href="href">tag</a>)
