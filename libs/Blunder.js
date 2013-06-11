@@ -4,19 +4,13 @@
     return this.slice(0, index) + string + this.slice(index + Math.abs(rem));
   };
 
-  String.prototype.indexByRegex = function(regex) {
-    var indexOf;
-
-    return indexOf = this.search(regex);
-  };
-
   window.Blunder = (function() {
     function Blunder() {}
 
     Blunder.prototype.reverseParse = function(text) {
       text = this._replaceExpr(/(<b>|<\/b>)/, text, "^");
       text = this._replaceExpr(/(<i>|<\/i>)/, text, "~");
-      text = this._replaceExpr(/(<u>|<\/u>)/, text, "_");
+      text = this._replaceExpr(/(<u>|<\/u>)/, text, "__");
       text = this._replaceExpr(/<br\/>/, text, "\n");
       text = this._replaceExpr(/<li>/, text, "    ");
       return text = this._replaceLink(/'(.*?)'/, />(.*?)<\/a>/, text);
@@ -26,7 +20,7 @@
       text = this._parseLink(/\[a\].*\n/, /\s(.+)/, text);
       text = this._parseExpr(/\^/, text, "<b>");
       text = this._parseExpr(/\~/, text, "<i>");
-      text = this._parseExpr(/\_/, text, "<u>");
+      text = this._parseExpr(/\_\_/, text, "<u>");
       text = this._parseExpr(/\n/, text, "<br/>", false);
       return text = this._parseExpr(/\s\s\s\s/, text, "<li>", false, true);
     };

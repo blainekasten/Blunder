@@ -1,9 +1,6 @@
 String.prototype.splice = (index, rem, string) ->
         @.slice(0, index) + string + @.slice(index + Math.abs(rem))
 
-String.prototype.indexByRegex = (regex) ->
-        indexOf = @.search(regex)
-
 class window.Blunder
 
         #
@@ -13,7 +10,7 @@ class window.Blunder
         reverseParse: (text) ->
                 text = @_replaceExpr(/(<b>|<\/b>)/, text, "^")          #Bold
                 text = @_replaceExpr(/(<i>|<\/i>)/, text, "~")          #Italic
-                text = @_replaceExpr(/(<u>|<\/u>)/, text, "_")          #Underline
+                text = @_replaceExpr(/(<u>|<\/u>)/, text, "__")          #Underline
                 text = @_replaceExpr(/<br\/>/, text, "\n")              #Line breaks
                 text = @_replaceExpr(/<li>/, text, "    ")              #list
                 text = @_replaceLink(/'(.*?)'/, />(.*?)<\/a>/, text)    #anchor
@@ -26,7 +23,7 @@ class window.Blunder
                 text = @_parseLink(/\[a\].*\n/, /\s(.+)/,  text)              #anchor
                 text = @_parseExpr(/\^/, text, "<b>")                           #Bold
                 text = @_parseExpr(/\~/, text, "<i>")                           #Italics
-                text = @_parseExpr(/\_/, text, "<u>")                           #Underlines
+                text = @_parseExpr(/\_\_/, text, "<u>")                           #Underlines
                 text = @_parseExpr(/\n/, text, "<br/>", false)                  #line breaks
                 text = @_parseExpr(/\s\s\s\s/, text, "<li>", false, true)       #list
 
