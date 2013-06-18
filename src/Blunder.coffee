@@ -1,6 +1,9 @@
 String.prototype.splice = (index, rem, string) ->
         @.slice(0, index) + string + @.slice(index + Math.abs(rem))
 
+String.prototype.indexByRegex = (regex) ->
+        indexOf = @.search(regex)
+
 class window.Blunder
 
         #
@@ -10,7 +13,7 @@ class window.Blunder
         reverseParse: (text) ->
                 text = @_replaceExpr(/(<b>|<\/b>)/, text, "^")          #Bold
                 text = @_replaceExpr(/(<i>|<\/i>)/, text, "~")          #Italic
-                text = @_replaceExpr(/(<u>|<\/u>)/, text, "__")          #Underline
+                text = @_replaceExpr(/(<u>|<\/u>)/, text, "__")         #Underline
                 text = @_replaceExpr(/<br\/>/, text, "\n")              #Line breaks
                 text = @_replaceExpr(/<li>/, text, "    ")              #list
                 text = @_replaceLink(/'(.*?)'/, />(.*?)<\/a>/, text)    #anchor
@@ -20,7 +23,7 @@ class window.Blunder
         # @param text is the string to convert ~^_,etc into html elements
         #
         parseText: (text) ->
-                text = @_parseLink(/\[a\].*\n/, /\s(.+)/,  text)              #anchor
+                text = @_parseLink(/\[a\]\S*/, /\s(.+)/,  text)              #anchor
                 text = @_parseExpr(/\^/, text, "<b>")                           #Bold
                 text = @_parseExpr(/\~/, text, "<i>")                           #Italics
                 text = @_parseExpr(/\_\_/, text, "<u>")                           #Underlines
@@ -42,17 +45,19 @@ class window.Blunder
 
         _parseLink: (linkExpr, tagExpr, text) ->
                 #test starts passing when a string matches [a]text tag\r
-                if /\[a\].*.\s\w.*/.test text
+                fullExpr = /\[a\].*.\s\w.*/
+                if fullExpr.test text
+                        fullCatch = text.match(fullExpr)
                         if text.match(linkExpr) is null
                                 return
                         else
-                                linkSrc = text.match(linkExpr)[0] 
-                        linkTag = linkSrc.match(tagExpr)[1]
-                        linkHref = linkSrc.match(/\[a\](.*)\s\b/)[1]
+                                linkCatch = text.match(linkExpr)
+                        linkTag = fullCatch[0].match(tagExpr)[1]
+                        linkHref = linkCatch[0].substring(3)
 
                         tag = "<a href='#{linkHref}'>#{linkTag}</a><br/>"
 
-                        text = text.replace(/(\[a\].*.\s\w.*)\n/, tag)
+                        text = text.replace(fullExpr, tag)
                         @_parseLink(linkExpr, tagExpr, text)
                 else text
         

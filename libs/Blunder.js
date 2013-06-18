@@ -4,6 +4,12 @@
     return this.slice(0, index) + string + this.slice(index + Math.abs(rem));
   };
 
+  String.prototype.indexByRegex = function(regex) {
+    var indexOf;
+
+    return indexOf = this.search(regex);
+  };
+
   window.Blunder = (function() {
     function Blunder() {}
 
@@ -17,7 +23,7 @@
     };
 
     Blunder.prototype.parseText = function(text) {
-      text = this._parseLink(/\[a\].*\n/, /\s(.+)/, text);
+      text = this._parseLink(/\[a\]\S*/, /\s(.+)/, text);
       text = this._parseExpr(/\^/, text, "<b>");
       text = this._parseExpr(/\~/, text, "<i>");
       text = this._parseExpr(/\_\_/, text, "<u>");
@@ -50,18 +56,20 @@
     };
 
     Blunder.prototype._parseLink = function(linkExpr, tagExpr, text) {
-      var linkHref, linkSrc, linkTag, tag;
+      var fullCatch, fullExpr, linkCatch, linkHref, linkTag, tag;
 
-      if (/\[a\].*.\s\w.*/.test(text)) {
+      fullExpr = /\[a\].*.\s\w.*/;
+      if (fullExpr.test(text)) {
+        fullCatch = text.match(fullExpr);
         if (text.match(linkExpr) === null) {
           return;
         } else {
-          linkSrc = text.match(linkExpr)[0];
+          linkCatch = text.match(linkExpr);
         }
-        linkTag = linkSrc.match(tagExpr)[1];
-        linkHref = linkSrc.match(/\[a\](.*)\s\b/)[1];
+        linkTag = fullCatch[0].match(tagExpr)[1];
+        linkHref = linkCatch[0].substring(3);
         tag = "<a href='" + linkHref + "'>" + linkTag + "</a><br/>";
-        text = text.replace(/(\[a\].*.\s\w.*)\n/, tag);
+        text = text.replace(fullExpr, tag);
         return this._parseLink(linkExpr, tagExpr, text);
       } else {
         return text;
