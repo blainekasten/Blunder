@@ -28,5 +28,5 @@ Here is the current list of elements that can convert:<br>
 ~ --> italic tags<br>
 __ --> underscore tags<br> 
 \n --> line break tags<br>
-____ --> li tags (four spaces, tab)
+____ --> li tags (four spaces, tab)<br>
 [a]href tag --> anchor tag (<a href="href">tag</a>)
